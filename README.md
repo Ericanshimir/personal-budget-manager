@@ -9,4 +9,4 @@ Run locally: npm start
 
 Deploy to GitHub Pages: npm run deploy
 
-Live Demo: GitHub Pages
+Live Demo: https://ericanshimir.github.io/personal-budget-manager/
