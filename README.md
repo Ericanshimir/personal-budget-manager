@@ -26,4 +26,4 @@ npm run deploy
 ```bash
 https://ericanshimir.github.io/personal-budget-manager/
 
-``
+```
