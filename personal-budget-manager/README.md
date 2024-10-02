@@ -1,6 +1,7 @@
 Personal Budget Manager is a React and TypeScript web app that helps users track expenses, set budgets, and view spending summaries. Users can add, filter, and categorize expenses, and get warnings when budgets are exceeded.
 
-How to Run: Clone the repo: git clone https://github.com/Ericanshimir/personal-budget-manager.git
+How to Run: 
+Clone the repo: git clone https://github.com/Ericanshimir/personal-budget-manager.git
 
 Install dependencies: npm install
 
