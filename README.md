@@ -10,14 +10,14 @@ Set budget limits and receive warnings
 
 View expense summaries via charts
 
+# Setup instructions
+
 # How to Run:
 
 ```bash
 Clone the repo: git clone https://github.com/Ericanshimir/personal-budget-manager.git
 
 ```
-# Setup instructions
-
 # Install dependencies: 
 
 npm install
