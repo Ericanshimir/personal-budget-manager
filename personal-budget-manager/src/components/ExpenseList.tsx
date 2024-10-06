@@ -1,56 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Expense } from '../types';
 
 interface Props {
   expenses: Expense[];
-  dispatch: React.Dispatch<any>;
-  setEditingExpense: React.Dispatch<React.SetStateAction<Expense | null>>;
+  handleEditExpense: (expense: Expense, index: number) => void;
+  handleDeleteExpense: (index: number) => void;
 }
 
-const ExpenseList: React.FC<Props> = ({ expenses, dispatch, setEditingExpense }) => {
-  const [filterCategory, setFilterCategory] = useState<string>('');
-  const [filterDate, setFilterDate] = useState<string>('');
-
-  const filteredExpenses = expenses.filter(expense => {
-    return (!filterCategory || expense.category === filterCategory) &&
-           (!filterDate || expense.date === filterDate);
-  });
-
-  const totalExpenses = filteredExpenses.reduce((total, expense) => total + expense.amount, 0);
-
+const ExpenseList: React.FC<Props> = ({ expenses, handleEditExpense, handleDeleteExpense }) => {
   return (
     <div>
-      {/* Filter Options */}
-      <div className="filter-container">
-        <label>Filter by Category: </label>
-        <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
-          <option value="">All</option>
-          <option value="food">Food</option>
-          <option value="entertainment">Entertainment</option>
-          <option value="others">Others</option>
-        </select>
-        
-        <label>Filter by Date: </label>
-        <input type="date" value={filterDate} onChange={(e) => setFilterDate(e.target.value)} />
-      </div>
-
-      {/* Expense List */}
-      <ul className="list-group">
-        {filteredExpenses.map((expense, index) => (
-          <li key={index} className="list-group-item">
-            <span>{expense.date} - {expense.category} - ${expense.amount.toFixed(2)}</span>
-            <div>
-              <button className="btn btn-primary" onClick={() => setEditingExpense(expense)}>Edit</button>
-              <button className="btn btn-danger" onClick={() => dispatch({ type: 'DELETE_EXPENSE', payload: index })}>Delete</button>
-            </div>
+      <h2>Expense List</h2>
+      <ul>
+        {expenses.map((expense, index) => (
+          <li key={index}>
+            <span>{expense.date} - ${expense.amount} - {expense.category}</span>
+            <button
+              style={{ backgroundColor: 'blue', color: 'white', margin: '0 5px' }}
+              onClick={() => handleEditExpense(expense, index)}
+            >
+              Edit
+            </button>
+            <button
+              style={{ backgroundColor: 'red', color: 'white' }}
+              onClick={() => handleDeleteExpense(index)}
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>
-
-      {/* Total Expenses */}
-      <div className="expense-total">
-        Total Expenses: ${totalExpenses.toFixed(2)}
-      </div>
     </div>
   );
 };

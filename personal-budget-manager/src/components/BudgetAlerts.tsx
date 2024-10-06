@@ -1,33 +1,60 @@
 import React from 'react';
 import { Expense } from '../types';
 
-type Category = 'food' | 'entertainment' | 'others';
-
 interface Props {
   expenses: Expense[];
-  budgetLimits: { [key in Category]: number };
+  budgetLimits: { [key: string]: number };
+  setBudgetLimits: React.Dispatch<React.SetStateAction<{ [key: string]: number }>>;
+  totalBudget: number;
 }
 
-const BudgetAlerts: React.FC<Props> = ({ expenses, budgetLimits }) => {
-  const categoryTotals: { [key in Category]: number } = expenses.reduce(
-    (totals, expense) => {
-      const category = expense.category as Category;
-      totals[category] = (totals[category] || 0) + expense.amount;
+const BudgetAlerts: React.FC<Props> = ({ expenses, budgetLimits, setBudgetLimits, totalBudget }) => {
+  const categoryTotals = expenses.reduce(
+    (totals: { [key: string]: number }, expense) => {
+      totals[expense.category] = (totals[expense.category] || 0) + expense.amount;
       return totals;
     },
     { food: 0, entertainment: 0, others: 0 }
   );
 
+  const handleBudgetLimitChange = (category: string, value: string) => {
+    setBudgetLimits((prevLimits) => ({
+      ...prevLimits,
+      [category]: parseFloat(value) || 0,
+    }));
+  };
+
+  const totalSpent = Object.values(categoryTotals).reduce((sum, value) => sum + value, 0);
+
   return (
-    <div>
+    <div className="budget-alert">
+      <h2>Budget Alerts</h2>
+
       {Object.keys(budgetLimits).map((category) => (
-        <div key={category}>
-          <p>{category}: Spent ${categoryTotals[category as Category].toFixed(2)} of ${budgetLimits[category as Category]}</p>
-          {categoryTotals[category as Category] >= budgetLimits[category as Category] && (
-            <p className="alert alert-warning">Warning: Over Budget!</p>
+        <div key={category} className="budget-item">
+          <label>{category.charAt(0).toUpperCase() + category.slice(1)} Budget:</label>
+          <input
+            type="number"
+            value={budgetLimits[category]}
+            onChange={(e) => handleBudgetLimitChange(category, e.target.value)}
+            placeholder={`Set ${category} budget`}
+          />
+          <p>
+            Spent: ${categoryTotals[category]?.toFixed(2)} / ${budgetLimits[category]?.toFixed(2)}
+          </p>
+          {categoryTotals[category] > budgetLimits[category] && (
+            <p className="alert-danger">Warning: Over Budget in {category}!</p>
           )}
         </div>
       ))}
+
+      <div className="total-budget-alert">
+        <h3>Total Budget</h3>
+        <p>Total Spent: ${totalSpent.toFixed(2)} / ${totalBudget.toFixed(2)}</p>
+        {totalSpent > totalBudget && (
+          <p className="alert-danger">Warning: Over Total Budget!</p>
+        )}
+      </div>
     </div>
   );
 };
